@@ -1,0 +1,103 @@
+%%
+Tiny       -> PROGRAM Name ':' Consts Types Dclns SubProgs Body Name '.' 	=> "program";
+
+Types      -> TYPE (Type ';')*                          => "types"
+           ->                                           => "types";
+
+Type       -> Name '=' Lit                              => "type"
+           -> Name '=' Name                             => "type";
+
+Lit        -> '(' Name list ',' ')'                     => "lit";
+  
+Consts     -> CONST (Const ';')*			=> "consts"
+           ->                                           => "consts";
+
+Const      -> Name '=' Expression                       => "const";
+
+Dclns      -> VAR (Dcln ';')*				=> "dclns"
+           -> 					     	=> "dclns";
+
+Dcln       -> Name list ',' ':' Name			=> "var";
+
+SubProgs   -> (Function)*                               => "subprogs";
+
+Function   -> FUNCTION  Name  Params  ':' Name ';' Consts Types Dclns Body Name ';' => "function"
+           -> PROCEDURE Name  Params  ';' Consts Types Dclns Body Name ';'          => "procedure";
+
+Params     -> '(' Dcln list ';' ')'                     => "params"
+           -> '(' ')'                                   => "params"
+           ->                                           => "params";
+
+Body       -> BEGINX Statement list ';' END      	=> "block";
+
+Statement  -> LOOP Statement list ';' POOL              => "loop"
+	   -> CASE Expression OF (CASE_CLAUSE ';')* OTHER END => "case"
+           -> CASE Expression OF (CASE_CLAUSE ';')* END  => "case"
+           -> REPEAT Statement list ';' UNTIL Expression         => "repeat"
+           -> FOR Name ASSIGNMENT Primary DOWNTO Primary DO Statement => "downto"
+           -> FOR Name ASSIGNMENT Primary TO Primary DO Statement     => "upto" 
+           -> Name ASSIGNMENT Expression          	=> "assign"
+           -> OUTPUT '(' Expression list ',' ')'        => "output"
+	   -> READ '(' Expression list ',' ')'          => "read"
+           -> IF Expression THEN Statement
+                            ELSE Statement       	=> "if"
+           -> IF Expression THEN Statement              => "if"
+           -> WHILE Expression DO Statement      	=> "while"
+           -> Body
+           -> Primary SWAP Primary                      => "swap"
+           -> EXIT                                      => "exit"
+           -> Expression
+           -> RETURN MissValue                          => "return"
+           -> RETURN '(' Expression ')'                 => "return"
+	   ->                                        	=> "<null>";
+
+MissValue  ->                                           => "Prime";
+
+OTHER      -> OTHERWISE Statement (';')*                => "otherwise";
+
+CASE_CLAUSE -> Primary ':' Statement      	        => "case_clause"
+            -> SCOPE ':' Statement                      => "case_clause";
+
+SCOPE      -> Primary RANGE Primary                     => "..";
+
+Expression -> Term 
+           -> Term LTE Term                             => "<="
+           -> Term '=' Term                             => "="
+           -> Term UEQ Term                             => "<>"
+           -> Term LGE Term                             => ">="
+           -> Term '<' Term                             => "<"
+           -> Term '>' Term                             => ">";
+
+Term       -> Adv
+           -> Term '+' Adv                               => "+"
+           -> Term '-' Adv                               => "-"
+           -> Term OR Adv                                => "or";
+
+Adv        -> Extra
+           -> Adv '*' Extra                              => "*"
+           -> Adv '/' Extra                              => "/"
+           -> Adv AND Extra                              => "and"
+           -> Adv MOD Extra                              => "mod";
+
+Extra      -> EXPI
+           -> '-' Extra                                 => "-"
+           -> '+' Extra                                 => "+"
+           -> NOT Extra                                 =>"not";
+
+EXPI       -> Primary
+           -> Primary MUL EXPI                          => "**";
+
+Primary    -> Name
+           -> Name '(' ')'                              => "call"
+           -> Name '(' Expression list ',' ')'          => "call"
+           -> INTEGER_NUM                               => "<integer>"
+           -> CHARACTER                                 => "<char>"
+	   -> STRING                                    => "<string>"
+           -> EOFX                                      => "eof"
+	   -> SUCC '(' Expression ')'                   => "succ"
+	   -> PRED '(' Expression ')'                   => "pred"
+	   -> ORD  '(' Expression ')'                   => "ord"
+	   -> CHR  '(' Expression ')'                   => "chr"
+           -> '(' Expression ')';
+
+Name       -> IDENTIFIER				=> "<identifier>";

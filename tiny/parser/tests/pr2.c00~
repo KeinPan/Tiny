@@ -1,0 +1,14 @@
+program pr2c05:
+var a: integer;
+begin
+   a := read;
+   case a of
+	  70: repeat
+	  begin
+	  a:=a+1;
+	  output(a);
+          end
+          until a<75;
+    end;
+	
+end pr2c05.

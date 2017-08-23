@@ -1,0 +1,10 @@
+       LIT    0             
+       LIT    1             
+       LIT    2             
+       BOP    BEXP          
+       UOP    UNEG          
+       SGV    0             
+       LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       HALT                 

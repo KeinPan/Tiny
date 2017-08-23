@@ -1,0 +1,30 @@
+program project0:
+var N,M,i,temper,result:integer;
+begin
+   result := 1;
+   N := read;
+   M := read;
+
+   if M <= N then 
+      begin
+         temper := N;
+         N := M;
+         M := temper;
+      end
+      else ;
+
+   while N <= M do
+   begin
+      i := 1;
+      temper := 0;
+      while i <= N do
+      begin	 	
+         temper := temper + result;
+	 i := i + 1;
+      end;
+      result := temper;
+      N := N + 1;
+   end;
+
+   output(result，N，M)		
+end project0.

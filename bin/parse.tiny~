@@ -1,0 +1,31 @@
+%%
+Tiny       -> PROGRAM Name ':' Dclns Body Name '.' 	=> "program";
+Dclns      -> VAR (Dcln ';')*				=> "dclns"
+           -> 					     	=> "dclns";
+Dcln       -> Name list ',' ':' Type			=> "dcln";
+Type       -> INTEGER 		             		=> "integer"
+           -> BOOLEAN				     	=> "boolean";
+Body       -> BEGINX Statement list ';' END      	=> "block";
+Statement  -> Name ASSIGNMENT Expression          	=> "assign"
+           -> OUTPUT '(' Expression ')' list ','        => "output"
+           -> IF Expression THEN Statement
+                            ELSE Statement       	=> "if"
+           -> IF Expression THEN Statement              => "if"
+           -> WHILE Expression DO Statement      	=> "while"
+           -> Body
+	   ->                                        	=> "<null>";
+
+Expression -> Term	                         		
+	   -> Term LTE Term				=> "<="
+           -> Term '+' Term                             => "+";
+
+Term       -> Primary 
+	   -> Primary '+' Term				=> "+";
+
+Primary    -> '-' Primary                            	=> "-"
+	   -> READ                                 	=> "read"
+           -> Name
+           -> INTEGER_NUM				=> "<integer>"
+           -> '(' Expression ')';
+
+Name       -> IDENTIFIER				=> "<identifier>";

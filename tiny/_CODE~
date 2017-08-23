@@ -1,0 +1,48 @@
+       LIT    0             
+       GOTO   L1            
+L2     LLV    4             
+       LIT    1             
+       BOP    BGT           
+       COND   L3     L4     
+L3     LIT    0             
+       LLV    1             
+       LLV    3             
+       LLV    2             
+       LLV    4             
+       LIT    1             
+       BOP    BMINUS        
+       CODE   L2            
+       CALL   5             
+       GOTO   L5            
+L4     NOP                  
+L5     LLV    1             
+       SOS    OUTPUT        
+       LLV    2             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       LLV    4             
+       LIT    1             
+       BOP    BGT           
+       COND   L6     L7     
+L6     LIT    0             
+       LLV    3             
+       LLV    2             
+       LLV    1             
+       LLV    4             
+       LIT    1             
+       BOP    BMINUS        
+       CODE   L2            
+       CALL   6             
+       GOTO   L8            
+L7     NOP                  
+L8     RTN    0             
+L1     SOS    INPUT         
+       SGV    0             
+       LIT    0             
+       LIT    1             
+       LIT    3             
+       LIT    2             
+       LGV    0             
+       CODE   L2            
+       CALL   1             
+       HALT                 

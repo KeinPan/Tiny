@@ -1,0 +1,29 @@
+<<< CODE GENERATOR >>> Processing Node program , Label is  
+<<< CODE GENERATOR >>> Processing Node dclns , Label is  
+<<< CODE GENERATOR >>> Processing Node dcln , Label is  
+       LIT    0             
+Incrementing Framesize to 1
+<<< CODE GENERATOR >>> Processing Node block , Label is  
+<<< CODE GENERATOR >>> Processing Node assign , Label is  
+<<< CODE GENERATOR >>> Processing Node - , Label is  
+<<< CODE GENERATOR >>> Processing Node ** , Label is  
+<<< CODE GENERATOR >>> Processing Node <integer> , Label is  
+       LIT    1             
+Incrementing Framesize to 2
+<<< CODE GENERATOR >>> Processing Node <integer> , Label is  
+       LIT    2             
+Incrementing Framesize to 3
+       BOP    BEXP          
+Decrementing Framesize to 2
+       UOP    UNEG          
+Decrementing Framesize to 1
+       SGV    0             
+<<< CODE GENERATOR >>> Processing Node output , Label is  
+<<< CODE GENERATOR >>> Processing Node <identifier> , Label is  
+Incrementing Framesize to 2
+       LGV    0             
+       SOS    OUTPUT        
+Decrementing Framesize to 1
+       SOS    OUTPUTL       
+<<< CODE GENERATOR >>> Processing Node <null> , Label is  
+       HALT                 

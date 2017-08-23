@@ -1,0 +1,54 @@
+%%
+Tiny       -> PROGRAM Name ':' Dclns Body Name '.' 	=> "program";
+
+Dclns      -> VAR (Dcln ';')*				=> "dclns"
+           -> 					     	=> "dclns";
+
+Dcln       -> Name list ',' ':' Type			=> "dcln";
+
+Type       -> INTEGER 		             		=> "integer"
+           -> BOOLEAN				     	=> "boolean";
+
+Body       -> BEGINX Statement list ';' END      	=> "block";
+
+Statement  -> Name ASSIGNMENT Expression          	=> "assign"
+           -> OUTPUT '(' Expression list ',' ')'        => "output"
+           -> IF Expression THEN Statement
+                            ELSE Statement       	=> "if"
+           -> IF Expression THEN Statement              => "if"
+           -> WHILE Expression DO Statement      	=> "while"
+           -> Body
+	   ->                                        	=> "<null>";
+
+Expression -> Term 
+           -> Term LTE Term                             => "<="
+           -> Term '=' Term                             => "="
+           -> Term UEQ Term                             => "<>"
+           -> Term LGE Term                             => ">="
+           -> Term '<' Term                             => "<"
+           -> Term '>' Term                             => ">";
+
+Term       -> Adv
+           -> Term '+' Adv                               => "+"
+           -> Term '-' Adv                               => "-"
+           -> Term OR Adv                                => "or";
+
+Adv        -> Extra
+           -> Extra '*' Adv                              => "*"
+           -> Extra '/' Adv                              => "/"
+           -> Extra AND Adv                              => "and"
+           -> Extra MOD Adv                              => "mod";
+
+Extra      -> Primary
+           -> '-' Primary                               => "-"
+           -> '+' Primary                               => "+"
+           -> NOT Primary                               =>"not";
+
+Primary    -> Primary MUL Primary                       => "**"
+           -> READ                                      => "read"
+           -> Name
+           -> INTEGER_NUM                               => "<integer>"
+           -> BOLCONST                                  => "<bolconst>"
+           -> EOF                                       => "<eof>"
+           -> '(' Expression ')';
+Name       -> IDENTIFIER				=> "<identifier>";

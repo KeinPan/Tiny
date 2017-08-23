@@ -1,0 +1,73 @@
+%%
+Tiny       -> PROGRAM Name ':' Dclns Body Name '.' 	=> "program";
+
+Dclns      -> VAR (Dcln ';')*				=> "dclns"
+           -> 					     	=> "dclns";
+
+Dcln       -> Name list ',' ':' Type			=> "dcln";
+
+Type       -> INTEGER 		             		=> "integer"
+           -> BOOLEAN				     	=> "boolean";
+
+Body       -> BEGINX Statement list ';' END      	=> "block";
+
+Statement  -> LOOP Statement list ';' POOL              => "loop"
+	   -> CASE Expression OF (CASE_CLAUSE ';')* OTHER END => "case"
+           -> CASE Expression OF (CASE_CLAUSE ';')* END  => "case"
+           -> REPEAT Statement list ';' UNTIL Expression         => "repeat"
+           -> FOR Name ASSIGNMENT Primary DOWNTO Primary DO Statement => "downto"
+           -> FOR Name ASSIGNMENT Primary TO Primary DO Statement     => "upto" 
+           -> Name ASSIGNMENT Expression          	=> "assign"
+           -> OUTPUT '(' Expression list ',' ')'        => "output"
+           -> IF Expression THEN Statement
+                            ELSE Statement       	=> "if"
+           -> IF Expression THEN Statement              => "if"
+           -> WHILE Expression DO Statement      	=> "while"
+           -> Body
+           -> Primary SWAP Primary                      => "swap"
+           -> EXIT                                      => "exit"
+	   ->                                        	=> "<null>";
+
+OTHER      -> OTHERWISE Statement                       => "otherwise";
+
+CASE_CLAUSE -> Primary ':' Statement      	        => "case_clause"
+            -> SCOPE ':' Statement                      => "case_clause";
+
+SCOPE      -> Primary RANGE Primary             => "..";
+
+Expression -> Term 
+           -> Term LTE Term                             => "<="
+           -> Term '=' Term                             => "="
+           -> Term UEQ Term                             => "<>"
+           -> Term LGE Term                             => ">="
+           -> Term '<' Term                             => "<"
+           -> Term '>' Term                             => ">";
+
+Term       -> Adv
+           -> Term '+' Adv                               => "+"
+           -> Term '-' Adv                               => "-"
+           -> Term OR Adv                                => "or";
+
+Adv        -> Extra
+           -> Adv '*' Extra                              => "*"
+           -> Adv '/' Extra                              => "/"
+           -> Adv AND Extra                              => "and"
+           -> Adv MOD Extra                              => "mod";
+
+Extra      -> EXPI
+           -> '-' Extra                                 => "-"
+           -> '+' Extra                                 => "+"
+           -> NOT Extra                                 =>"not";
+
+EXPI       -> Primary
+           -> Primary MUL EXPI                          => "**";
+
+Primary    -> READ                                      => "read"
+           -> Name
+           -> INTEGER_NUM                               => "<integer>"
+           -> TRUE                                      => "true"
+           -> FALSE                                     => "false"
+           -> EOFX                                      => "eof"
+           -> '(' Expression ')';
+
+Name       -> IDENTIFIER				=> "<identifier>";

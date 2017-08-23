@@ -1,0 +1,3575 @@
+   0  $accept : Tiny $end
+
+   1  Tiny : PROGRAM Name ':' Consts Types Dclns SubProgs Body Name '.'
+
+   2  Types : TYPE Types_1
+   3        |
+
+   4  Types_1 :
+   5          | Type ';' Types_1
+
+   6  Type : Name '=' Lit
+   7       | Name '=' Name
+
+   8  Lit : '(' Lit_1
+
+   9  Lit_1 : Name ')'
+  10        | Name ',' Lit_1
+
+  11  Consts : CONST Consts_1
+  12         |
+
+  13  Consts_1 :
+  14           | Const ';' Consts_1
+
+  15  Const : Name '=' Expression
+
+  16  Dclns : VAR Dclns_1
+  17        |
+
+  18  Dclns_1 :
+  19          | Dcln ';' Dclns_1
+
+  20  Dcln : Dcln_1
+
+  21  Dcln_1 : Name ':' Name
+  22         | Name ',' Dcln_1
+
+  23  SubProgs : SubProgs_1
+
+  24  SubProgs_1 :
+  25             | Function SubProgs_1
+
+  26  Function : FUNCTION Name Params ':' Name ';' Consts Types Dclns Body Name ';'
+  27           | PROCEDURE Name Params ';' Consts Types Dclns Body Name ';'
+
+  28  Params : '(' Params_1
+  29         | '(' ')'
+  30         |
+
+  31  Params_1 : Dcln ')'
+  32           | Dcln ';' Params_1
+
+  33  Body : BEGINX Body_1
+
+  34  Body_1 : Statement END
+  35         | Statement ';' Body_1
+
+  36  Statement : LOOP Statement_1
+  37            | CASE Expression OF Statement_1_1
+  38            | CASE Expression OF Statement_1_1_1
+  39            | REPEAT Statement_1_1_1_1
+  40            | FOR Name ASSIGNMENT Primary DOWNTO Primary DO Statement
+  41            | FOR Name ASSIGNMENT Primary TO Primary DO Statement
+  42            | Name ASSIGNMENT Expression
+  43            | OUTPUT '(' Statement_1_1_1_1_1
+  44            | READ '(' Statement_1_1_1_1_1_1
+  45            | IF Expression THEN Statement ELSE Statement
+  46            | IF Expression THEN Statement
+  47            | WHILE Expression DO Statement
+  48            | Body
+  49            | Primary SWAP Primary
+  50            | EXIT
+  51            | Expression
+  52            | RETURN MissValue
+  53            | RETURN '(' Expression ')'
+  54            |
+
+  55  Statement_1_1_1_1_1_1 : Expression ')'
+  56                        | Expression ',' Statement_1_1_1_1_1_1
+
+  57  Statement_1_1_1_1_1 : Expression ')'
+  58                      | Expression ',' Statement_1_1_1_1_1
+
+  59  Statement_1_1_1_1 : Statement UNTIL Expression
+  60                    | Statement ';' Statement_1_1_1_1
+
+  61  Statement_1_1_1 : END
+  62                  | CASE_CLAUSE ';' Statement_1_1_1
+
+  63  Statement_1_1 : OTHER END
+  64                | CASE_CLAUSE ';' Statement_1_1
+
+  65  Statement_1 : Statement POOL
+  66              | Statement ';' Statement_1
+
+  67  MissValue : TheValue
+
+  68  TheValue :
+
+  69  OTHER : OTHERWISE Statement OTHER_1
+
+  70  OTHER_1 :
+  71          | ';' OTHER_1
+
+  72  CASE_CLAUSE : Primary ':' Statement
+  73              | SCOPE ':' Statement
+
+  74  SCOPE : Primary RANGE Primary
+
+  75  Expression : Term
+  76             | Term LTE Term
+  77             | Term '=' Term
+  78             | Term UEQ Term
+  79             | Term LGE Term
+  80             | Term '<' Term
+  81             | Term '>' Term
+
+  82  Term : Adv
+  83       | Term '+' Adv
+  84       | Term '-' Adv
+  85       | Term OR Adv
+
+  86  Adv : Extra
+  87      | Adv '*' Extra
+  88      | Adv '/' Extra
+  89      | Adv AND Extra
+  90      | Adv MOD Extra
+
+  91  Extra : EXPI
+  92        | '-' Extra
+  93        | '+' Extra
+  94        | NOT Extra
+
+  95  EXPI : Primary
+  96       | Primary MUL EXPI
+
+  97  Primary : Name
+  98          | Name '(' ')'
+  99          | Name '(' Primary_1
+ 100          | INTEGER_NUM
+ 101          | CHARACTER
+ 102          | STRING
+ 103          | EOFX
+ 104          | SUCC '(' Expression ')'
+ 105          | PRED '(' Expression ')'
+ 106          | ORD '(' Expression ')'
+ 107          | CHR '(' Expression ')'
+ 108          | '(' Expression ')'
+
+ 109  Primary_1 : Expression ')'
+ 110            | Expression ',' Primary_1
+
+ 111  Name : IDENTIFIER
+
+state 0
+	$accept : . Tiny $end  (0)
+
+	PROGRAM  shift 1
+	.  error
+
+	Tiny  goto 2
+
+
+state 1
+	Tiny : PROGRAM . Name ':' Consts Types Dclns SubProgs Body Name '.'  (1)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 4
+
+
+state 2
+	$accept : Tiny . $end  (0)
+
+	$end  accept
+
+
+state 3
+	Name : IDENTIFIER .  (111)
+
+	.  reduce 111
+
+
+state 4
+	Tiny : PROGRAM Name . ':' Consts Types Dclns SubProgs Body Name '.'  (1)
+
+	':'  shift 5
+	.  error
+
+
+state 5
+	Tiny : PROGRAM Name ':' . Consts Types Dclns SubProgs Body Name '.'  (1)
+	Consts : .  (12)
+
+	CONST  shift 6
+	VAR  reduce 12
+	FUNCTION  reduce 12
+	PROCEDURE  reduce 12
+	BEGINX  reduce 12
+	TYPE  reduce 12
+
+	Consts  goto 7
+
+
+state 6
+	Consts : CONST . Consts_1  (11)
+	Consts_1 : .  (13)
+
+	IDENTIFIER  shift 3
+	VAR  reduce 13
+	FUNCTION  reduce 13
+	PROCEDURE  reduce 13
+	BEGINX  reduce 13
+	TYPE  reduce 13
+
+	Const  goto 8
+	Consts_1  goto 9
+	Name  goto 10
+
+
+state 7
+	Tiny : PROGRAM Name ':' Consts . Types Dclns SubProgs Body Name '.'  (1)
+	Types : .  (3)
+
+	TYPE  shift 11
+	VAR  reduce 3
+	FUNCTION  reduce 3
+	PROCEDURE  reduce 3
+	BEGINX  reduce 3
+
+	Types  goto 12
+
+
+state 8
+	Consts_1 : Const . ';' Consts_1  (14)
+
+	';'  shift 13
+	.  error
+
+
+state 9
+	Consts : CONST Consts_1 .  (11)
+
+	.  reduce 11
+
+
+state 10
+	Const : Name . '=' Expression  (15)
+
+	'='  shift 14
+	.  error
+
+
+state 11
+	Types : TYPE . Types_1  (2)
+	Types_1 : .  (4)
+
+	IDENTIFIER  shift 3
+	VAR  reduce 4
+	FUNCTION  reduce 4
+	PROCEDURE  reduce 4
+	BEGINX  reduce 4
+
+	Types_1  goto 15
+	Name  goto 16
+	Type  goto 17
+
+
+state 12
+	Tiny : PROGRAM Name ':' Consts Types . Dclns SubProgs Body Name '.'  (1)
+	Dclns : .  (17)
+
+	VAR  shift 18
+	FUNCTION  reduce 17
+	PROCEDURE  reduce 17
+	BEGINX  reduce 17
+
+	Dclns  goto 19
+
+
+state 13
+	Consts_1 : Const ';' . Consts_1  (14)
+	Consts_1 : .  (13)
+
+	IDENTIFIER  shift 3
+	VAR  reduce 13
+	FUNCTION  reduce 13
+	PROCEDURE  reduce 13
+	BEGINX  reduce 13
+	TYPE  reduce 13
+
+	Const  goto 8
+	Consts_1  goto 20
+	Name  goto 10
+
+
+state 14
+	Const : Name '=' . Expression  (15)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 38
+	Primary  goto 39
+
+
+state 15
+	Types : TYPE Types_1 .  (2)
+
+	.  reduce 2
+
+
+state 16
+	Type : Name . '=' Lit  (6)
+	Type : Name . '=' Name  (7)
+
+	'='  shift 40
+	.  error
+
+
+state 17
+	Types_1 : Type . ';' Types_1  (5)
+
+	';'  shift 41
+	.  error
+
+
+state 18
+	Dclns : VAR . Dclns_1  (16)
+	Dclns_1 : .  (18)
+
+	IDENTIFIER  shift 3
+	FUNCTION  reduce 18
+	PROCEDURE  reduce 18
+	BEGINX  reduce 18
+
+	Dcln  goto 42
+	Dcln_1  goto 43
+	Name  goto 44
+	Dclns_1  goto 45
+
+
+state 19
+	Tiny : PROGRAM Name ':' Consts Types Dclns . SubProgs Body Name '.'  (1)
+	SubProgs_1 : .  (24)
+
+	FUNCTION  shift 46
+	PROCEDURE  shift 47
+	BEGINX  reduce 24
+
+	Function  goto 48
+	SubProgs_1  goto 49
+	SubProgs  goto 50
+
+
+state 20
+	Consts_1 : Const ';' Consts_1 .  (14)
+
+	.  reduce 14
+
+
+state 21
+	Primary : STRING .  (102)
+
+	.  reduce 102
+
+
+state 22
+	Primary : CHR . '(' Expression ')'  (107)
+
+	'('  shift 51
+	.  error
+
+
+state 23
+	Primary : CHARACTER .  (101)
+
+	.  reduce 101
+
+
+state 24
+	Primary : PRED . '(' Expression ')'  (105)
+
+	'('  shift 52
+	.  error
+
+
+state 25
+	Extra : NOT . Extra  (94)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 53
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 26
+	Primary : ORD . '(' Expression ')'  (106)
+
+	'('  shift 54
+	.  error
+
+
+state 27
+	Primary : INTEGER_NUM .  (100)
+
+	.  reduce 100
+
+
+state 28
+	Primary : EOFX .  (103)
+
+	.  reduce 103
+
+
+state 29
+	Primary : SUCC . '(' Expression ')'  (104)
+
+	'('  shift 55
+	.  error
+
+
+state 30
+	Primary : '(' . Expression ')'  (108)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 56
+	Primary  goto 39
+
+
+state 31
+	Extra : '+' . Extra  (93)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 57
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 32
+	Extra : '-' . Extra  (92)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 58
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 33
+	Term : Adv .  (82)
+	Adv : Adv . '*' Extra  (87)
+	Adv : Adv . '/' Extra  (88)
+	Adv : Adv . AND Extra  (89)
+	Adv : Adv . MOD Extra  (90)
+
+	MOD  shift 59
+	AND  shift 60
+	'*'  shift 61
+	'/'  shift 62
+	END  reduce 82
+	LGE  reduce 82
+	POOL  reduce 82
+	ELSE  reduce 82
+	UEQ  reduce 82
+	UNTIL  reduce 82
+	THEN  reduce 82
+	OF  reduce 82
+	DO  reduce 82
+	LTE  reduce 82
+	OR  reduce 82
+	';'  reduce 82
+	'='  reduce 82
+	')'  reduce 82
+	','  reduce 82
+	'<'  reduce 82
+	'>'  reduce 82
+	'+'  reduce 82
+	'-'  reduce 82
+
+
+state 34
+	Adv : Extra .  (86)
+
+	.  reduce 86
+
+
+state 35
+	Extra : EXPI .  (91)
+
+	.  reduce 91
+
+
+state 36
+	Expression : Term .  (75)
+	Expression : Term . LTE Term  (76)
+	Expression : Term . '=' Term  (77)
+	Expression : Term . UEQ Term  (78)
+	Expression : Term . LGE Term  (79)
+	Expression : Term . '<' Term  (80)
+	Expression : Term . '>' Term  (81)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	LGE  shift 63
+	UEQ  shift 64
+	LTE  shift 65
+	OR  shift 66
+	'='  shift 67
+	'<'  shift 68
+	'>'  shift 69
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 75
+	POOL  reduce 75
+	ELSE  reduce 75
+	UNTIL  reduce 75
+	THEN  reduce 75
+	OF  reduce 75
+	DO  reduce 75
+	';'  reduce 75
+	')'  reduce 75
+	','  reduce 75
+
+
+state 37
+	Primary : Name .  (97)
+	Primary : Name . '(' ')'  (98)
+	Primary : Name . '(' Primary_1  (99)
+
+	'('  shift 72
+	END  reduce 97
+	LGE  reduce 97
+	TO  reduce 97
+	POOL  reduce 97
+	MUL  reduce 97
+	RANGE  reduce 97
+	ELSE  reduce 97
+	UEQ  reduce 97
+	UNTIL  reduce 97
+	THEN  reduce 97
+	OF  reduce 97
+	MOD  reduce 97
+	DO  reduce 97
+	AND  reduce 97
+	LTE  reduce 97
+	OR  reduce 97
+	DOWNTO  reduce 97
+	':'  reduce 97
+	';'  reduce 97
+	'='  reduce 97
+	')'  reduce 97
+	','  reduce 97
+	'<'  reduce 97
+	'>'  reduce 97
+	'+'  reduce 97
+	'-'  reduce 97
+	'*'  reduce 97
+	'/'  reduce 97
+
+
+state 38
+	Const : Name '=' Expression .  (15)
+
+	.  reduce 15
+
+
+state 39
+	EXPI : Primary .  (95)
+	EXPI : Primary . MUL EXPI  (96)
+
+	MUL  shift 73
+	END  reduce 95
+	LGE  reduce 95
+	POOL  reduce 95
+	ELSE  reduce 95
+	UEQ  reduce 95
+	UNTIL  reduce 95
+	THEN  reduce 95
+	OF  reduce 95
+	MOD  reduce 95
+	DO  reduce 95
+	AND  reduce 95
+	LTE  reduce 95
+	OR  reduce 95
+	';'  reduce 95
+	'='  reduce 95
+	')'  reduce 95
+	','  reduce 95
+	'<'  reduce 95
+	'>'  reduce 95
+	'+'  reduce 95
+	'-'  reduce 95
+	'*'  reduce 95
+	'/'  reduce 95
+
+
+state 40
+	Type : Name '=' . Lit  (6)
+	Type : Name '=' . Name  (7)
+
+	IDENTIFIER  shift 3
+	'('  shift 74
+	.  error
+
+	Name  goto 75
+	Lit  goto 76
+
+
+state 41
+	Types_1 : Type ';' . Types_1  (5)
+	Types_1 : .  (4)
+
+	IDENTIFIER  shift 3
+	VAR  reduce 4
+	FUNCTION  reduce 4
+	PROCEDURE  reduce 4
+	BEGINX  reduce 4
+
+	Types_1  goto 77
+	Name  goto 16
+	Type  goto 17
+
+
+state 42
+	Dclns_1 : Dcln . ';' Dclns_1  (19)
+
+	';'  shift 78
+	.  error
+
+
+state 43
+	Dcln : Dcln_1 .  (20)
+
+	.  reduce 20
+
+
+state 44
+	Dcln_1 : Name . ':' Name  (21)
+	Dcln_1 : Name . ',' Dcln_1  (22)
+
+	':'  shift 79
+	','  shift 80
+	.  error
+
+
+state 45
+	Dclns : VAR Dclns_1 .  (16)
+
+	.  reduce 16
+
+
+state 46
+	Function : FUNCTION . Name Params ':' Name ';' Consts Types Dclns Body Name ';'  (26)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 81
+
+
+state 47
+	Function : PROCEDURE . Name Params ';' Consts Types Dclns Body Name ';'  (27)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 82
+
+
+state 48
+	SubProgs_1 : Function . SubProgs_1  (25)
+	SubProgs_1 : .  (24)
+
+	FUNCTION  shift 46
+	PROCEDURE  shift 47
+	BEGINX  reduce 24
+
+	Function  goto 48
+	SubProgs_1  goto 83
+
+
+state 49
+	SubProgs : SubProgs_1 .  (23)
+
+	.  reduce 23
+
+
+state 50
+	Tiny : PROGRAM Name ':' Consts Types Dclns SubProgs . Body Name '.'  (1)
+
+	BEGINX  shift 84
+	.  error
+
+	Body  goto 85
+
+
+state 51
+	Primary : CHR '(' . Expression ')'  (107)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 86
+	Primary  goto 39
+
+
+state 52
+	Primary : PRED '(' . Expression ')'  (105)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 87
+	Primary  goto 39
+
+
+state 53
+	Extra : NOT Extra .  (94)
+
+	.  reduce 94
+
+
+state 54
+	Primary : ORD '(' . Expression ')'  (106)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 88
+	Primary  goto 39
+
+
+state 55
+	Primary : SUCC '(' . Expression ')'  (104)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 89
+	Primary  goto 39
+
+
+state 56
+	Primary : '(' Expression . ')'  (108)
+
+	')'  shift 90
+	.  error
+
+
+state 57
+	Extra : '+' Extra .  (93)
+
+	.  reduce 93
+
+
+state 58
+	Extra : '-' Extra .  (92)
+
+	.  reduce 92
+
+
+state 59
+	Adv : Adv MOD . Extra  (90)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 91
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 60
+	Adv : Adv AND . Extra  (89)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 92
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 61
+	Adv : Adv '*' . Extra  (87)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 93
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 62
+	Adv : Adv '/' . Extra  (88)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Extra  goto 94
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 63
+	Expression : Term LGE . Term  (79)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 95
+	Name  goto 37
+	Primary  goto 39
+
+
+state 64
+	Expression : Term UEQ . Term  (78)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 96
+	Name  goto 37
+	Primary  goto 39
+
+
+state 65
+	Expression : Term LTE . Term  (76)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 97
+	Name  goto 37
+	Primary  goto 39
+
+
+state 66
+	Term : Term OR . Adv  (85)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 98
+	Extra  goto 34
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 67
+	Expression : Term '=' . Term  (77)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 99
+	Name  goto 37
+	Primary  goto 39
+
+
+state 68
+	Expression : Term '<' . Term  (80)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 100
+	Name  goto 37
+	Primary  goto 39
+
+
+state 69
+	Expression : Term '>' . Term  (81)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 101
+	Name  goto 37
+	Primary  goto 39
+
+
+state 70
+	Term : Term '+' . Adv  (83)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 102
+	Extra  goto 34
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 71
+	Term : Term '-' . Adv  (84)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 103
+	Extra  goto 34
+	EXPI  goto 35
+	Name  goto 37
+	Primary  goto 39
+
+
+state 72
+	Primary : Name '(' . ')'  (98)
+	Primary : Name '(' . Primary_1  (99)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	')'  shift 104
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	Primary_1  goto 105
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 106
+	Primary  goto 39
+
+
+state 73
+	EXPI : Primary MUL . EXPI  (96)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	.  error
+
+	EXPI  goto 107
+	Name  goto 37
+	Primary  goto 39
+
+
+state 74
+	Lit : '(' . Lit_1  (8)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Lit_1  goto 108
+	Name  goto 109
+
+
+state 75
+	Type : Name '=' Name .  (7)
+
+	.  reduce 7
+
+
+state 76
+	Type : Name '=' Lit .  (6)
+
+	.  reduce 6
+
+
+state 77
+	Types_1 : Type ';' Types_1 .  (5)
+
+	.  reduce 5
+
+
+state 78
+	Dclns_1 : Dcln ';' . Dclns_1  (19)
+	Dclns_1 : .  (18)
+
+	IDENTIFIER  shift 3
+	FUNCTION  reduce 18
+	PROCEDURE  reduce 18
+	BEGINX  reduce 18
+
+	Dcln  goto 42
+	Dcln_1  goto 43
+	Name  goto 44
+	Dclns_1  goto 110
+
+
+state 79
+	Dcln_1 : Name ':' . Name  (21)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 111
+
+
+state 80
+	Dcln_1 : Name ',' . Dcln_1  (22)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Dcln_1  goto 112
+	Name  goto 44
+
+
+state 81
+	Function : FUNCTION Name . Params ':' Name ';' Consts Types Dclns Body Name ';'  (26)
+	Params : .  (30)
+
+	'('  shift 113
+	':'  reduce 30
+
+	Params  goto 114
+
+
+state 82
+	Function : PROCEDURE Name . Params ';' Consts Types Dclns Body Name ';'  (27)
+	Params : .  (30)
+
+	'('  shift 113
+	';'  reduce 30
+
+	Params  goto 115
+
+
+state 83
+	SubProgs_1 : Function SubProgs_1 .  (25)
+
+	.  reduce 25
+
+
+state 84
+	Body : BEGINX . Body_1  (33)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Body_1  goto 126
+	Statement  goto 127
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 85
+	Tiny : PROGRAM Name ':' Consts Types Dclns SubProgs Body . Name '.'  (1)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 132
+
+
+state 86
+	Primary : CHR '(' Expression . ')'  (107)
+
+	')'  shift 133
+	.  error
+
+
+state 87
+	Primary : PRED '(' Expression . ')'  (105)
+
+	')'  shift 134
+	.  error
+
+
+state 88
+	Primary : ORD '(' Expression . ')'  (106)
+
+	')'  shift 135
+	.  error
+
+
+state 89
+	Primary : SUCC '(' Expression . ')'  (104)
+
+	')'  shift 136
+	.  error
+
+
+state 90
+	Primary : '(' Expression ')' .  (108)
+
+	.  reduce 108
+
+
+state 91
+	Adv : Adv MOD Extra .  (90)
+
+	.  reduce 90
+
+
+state 92
+	Adv : Adv AND Extra .  (89)
+
+	.  reduce 89
+
+
+state 93
+	Adv : Adv '*' Extra .  (87)
+
+	.  reduce 87
+
+
+state 94
+	Adv : Adv '/' Extra .  (88)
+
+	.  reduce 88
+
+
+state 95
+	Expression : Term LGE Term .  (79)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	OR  shift 66
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 79
+	POOL  reduce 79
+	ELSE  reduce 79
+	UNTIL  reduce 79
+	THEN  reduce 79
+	OF  reduce 79
+	DO  reduce 79
+	';'  reduce 79
+	')'  reduce 79
+	','  reduce 79
+
+
+state 96
+	Expression : Term UEQ Term .  (78)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	OR  shift 66
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 78
+	POOL  reduce 78
+	ELSE  reduce 78
+	UNTIL  reduce 78
+	THEN  reduce 78
+	OF  reduce 78
+	DO  reduce 78
+	';'  reduce 78
+	')'  reduce 78
+	','  reduce 78
+
+
+state 97
+	Expression : Term LTE Term .  (76)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	OR  shift 66
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 76
+	POOL  reduce 76
+	ELSE  reduce 76
+	UNTIL  reduce 76
+	THEN  reduce 76
+	OF  reduce 76
+	DO  reduce 76
+	';'  reduce 76
+	')'  reduce 76
+	','  reduce 76
+
+
+state 98
+	Term : Term OR Adv .  (85)
+	Adv : Adv . '*' Extra  (87)
+	Adv : Adv . '/' Extra  (88)
+	Adv : Adv . AND Extra  (89)
+	Adv : Adv . MOD Extra  (90)
+
+	MOD  shift 59
+	AND  shift 60
+	'*'  shift 61
+	'/'  shift 62
+	END  reduce 85
+	LGE  reduce 85
+	POOL  reduce 85
+	ELSE  reduce 85
+	UEQ  reduce 85
+	UNTIL  reduce 85
+	THEN  reduce 85
+	OF  reduce 85
+	DO  reduce 85
+	LTE  reduce 85
+	OR  reduce 85
+	';'  reduce 85
+	'='  reduce 85
+	')'  reduce 85
+	','  reduce 85
+	'<'  reduce 85
+	'>'  reduce 85
+	'+'  reduce 85
+	'-'  reduce 85
+
+
+state 99
+	Expression : Term '=' Term .  (77)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	OR  shift 66
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 77
+	POOL  reduce 77
+	ELSE  reduce 77
+	UNTIL  reduce 77
+	THEN  reduce 77
+	OF  reduce 77
+	DO  reduce 77
+	';'  reduce 77
+	')'  reduce 77
+	','  reduce 77
+
+
+state 100
+	Expression : Term '<' Term .  (80)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	OR  shift 66
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 80
+	POOL  reduce 80
+	ELSE  reduce 80
+	UNTIL  reduce 80
+	THEN  reduce 80
+	OF  reduce 80
+	DO  reduce 80
+	';'  reduce 80
+	')'  reduce 80
+	','  reduce 80
+
+
+state 101
+	Expression : Term '>' Term .  (81)
+	Term : Term . '+' Adv  (83)
+	Term : Term . '-' Adv  (84)
+	Term : Term . OR Adv  (85)
+
+	OR  shift 66
+	'+'  shift 70
+	'-'  shift 71
+	END  reduce 81
+	POOL  reduce 81
+	ELSE  reduce 81
+	UNTIL  reduce 81
+	THEN  reduce 81
+	OF  reduce 81
+	DO  reduce 81
+	';'  reduce 81
+	')'  reduce 81
+	','  reduce 81
+
+
+state 102
+	Term : Term '+' Adv .  (83)
+	Adv : Adv . '*' Extra  (87)
+	Adv : Adv . '/' Extra  (88)
+	Adv : Adv . AND Extra  (89)
+	Adv : Adv . MOD Extra  (90)
+
+	MOD  shift 59
+	AND  shift 60
+	'*'  shift 61
+	'/'  shift 62
+	END  reduce 83
+	LGE  reduce 83
+	POOL  reduce 83
+	ELSE  reduce 83
+	UEQ  reduce 83
+	UNTIL  reduce 83
+	THEN  reduce 83
+	OF  reduce 83
+	DO  reduce 83
+	LTE  reduce 83
+	OR  reduce 83
+	';'  reduce 83
+	'='  reduce 83
+	')'  reduce 83
+	','  reduce 83
+	'<'  reduce 83
+	'>'  reduce 83
+	'+'  reduce 83
+	'-'  reduce 83
+
+
+state 103
+	Term : Term '-' Adv .  (84)
+	Adv : Adv . '*' Extra  (87)
+	Adv : Adv . '/' Extra  (88)
+	Adv : Adv . AND Extra  (89)
+	Adv : Adv . MOD Extra  (90)
+
+	MOD  shift 59
+	AND  shift 60
+	'*'  shift 61
+	'/'  shift 62
+	END  reduce 84
+	LGE  reduce 84
+	POOL  reduce 84
+	ELSE  reduce 84
+	UEQ  reduce 84
+	UNTIL  reduce 84
+	THEN  reduce 84
+	OF  reduce 84
+	DO  reduce 84
+	LTE  reduce 84
+	OR  reduce 84
+	';'  reduce 84
+	'='  reduce 84
+	')'  reduce 84
+	','  reduce 84
+	'<'  reduce 84
+	'>'  reduce 84
+	'+'  reduce 84
+	'-'  reduce 84
+
+
+state 104
+	Primary : Name '(' ')' .  (98)
+
+	.  reduce 98
+
+
+state 105
+	Primary : Name '(' Primary_1 .  (99)
+
+	.  reduce 99
+
+
+state 106
+	Primary_1 : Expression . ')'  (109)
+	Primary_1 : Expression . ',' Primary_1  (110)
+
+	')'  shift 137
+	','  shift 138
+	.  error
+
+
+state 107
+	EXPI : Primary MUL EXPI .  (96)
+
+	.  reduce 96
+
+
+state 108
+	Lit : '(' Lit_1 .  (8)
+
+	.  reduce 8
+
+
+state 109
+	Lit_1 : Name . ')'  (9)
+	Lit_1 : Name . ',' Lit_1  (10)
+
+	')'  shift 139
+	','  shift 140
+	.  error
+
+
+state 110
+	Dclns_1 : Dcln ';' Dclns_1 .  (19)
+
+	.  reduce 19
+
+
+state 111
+	Dcln_1 : Name ':' Name .  (21)
+
+	.  reduce 21
+
+
+state 112
+	Dcln_1 : Name ',' Dcln_1 .  (22)
+
+	.  reduce 22
+
+
+state 113
+	Params : '(' . Params_1  (28)
+	Params : '(' . ')'  (29)
+
+	IDENTIFIER  shift 3
+	')'  shift 141
+	.  error
+
+	Params_1  goto 142
+	Dcln  goto 143
+	Dcln_1  goto 43
+	Name  goto 44
+
+
+state 114
+	Function : FUNCTION Name Params . ':' Name ';' Consts Types Dclns Body Name ';'  (26)
+
+	':'  shift 144
+	.  error
+
+
+state 115
+	Function : PROCEDURE Name Params . ';' Consts Types Dclns Body Name ';'  (27)
+
+	';'  shift 145
+	.  error
+
+
+state 116
+	Statement : IF . Expression THEN Statement ELSE Statement  (45)
+	Statement : IF . Expression THEN Statement  (46)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 146
+	Primary  goto 39
+
+
+state 117
+	Statement : READ . '(' Statement_1_1_1_1_1_1  (44)
+
+	'('  shift 147
+	.  error
+
+
+state 118
+	Statement : REPEAT . Statement_1_1_1_1  (39)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 148
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Statement_1_1_1_1  goto 149
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 119
+	Statement : RETURN . MissValue  (52)
+	Statement : RETURN . '(' Expression ')'  (53)
+	TheValue : .  (68)
+
+	'('  shift 150
+	END  reduce 68
+	POOL  reduce 68
+	ELSE  reduce 68
+	UNTIL  reduce 68
+	';'  reduce 68
+
+	MissValue  goto 151
+	TheValue  goto 152
+
+
+state 120
+	Statement : FOR . Name ASSIGNMENT Primary DOWNTO Primary DO Statement  (40)
+	Statement : FOR . Name ASSIGNMENT Primary TO Primary DO Statement  (41)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 153
+
+
+state 121
+	Statement : CASE . Expression OF Statement_1_1  (37)
+	Statement : CASE . Expression OF Statement_1_1_1  (38)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 154
+	Primary  goto 39
+
+
+state 122
+	Statement : WHILE . Expression DO Statement  (47)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 155
+	Primary  goto 39
+
+
+state 123
+	Statement : OUTPUT . '(' Statement_1_1_1_1_1  (43)
+
+	'('  shift 156
+	.  error
+
+
+state 124
+	Statement : EXIT .  (50)
+
+	.  reduce 50
+
+
+state 125
+	Statement : LOOP . Statement_1  (36)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	POOL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement_1  goto 157
+	Statement  goto 158
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 126
+	Body : BEGINX Body_1 .  (33)
+
+	.  reduce 33
+
+
+state 127
+	Body_1 : Statement . END  (34)
+	Body_1 : Statement . ';' Body_1  (35)
+
+	END  shift 159
+	';'  shift 160
+	.  error
+
+
+state 128
+	Statement : Name . ASSIGNMENT Expression  (42)
+	Primary : Name .  (97)
+	Primary : Name . '(' ')'  (98)
+	Primary : Name . '(' Primary_1  (99)
+
+	ASSIGNMENT  shift 161
+	'('  shift 72
+	END  reduce 97
+	LGE  reduce 97
+	POOL  reduce 97
+	MUL  reduce 97
+	ELSE  reduce 97
+	UEQ  reduce 97
+	UNTIL  reduce 97
+	SWAP  reduce 97
+	MOD  reduce 97
+	AND  reduce 97
+	LTE  reduce 97
+	OR  reduce 97
+	';'  reduce 97
+	'='  reduce 97
+	'<'  reduce 97
+	'>'  reduce 97
+	'+'  reduce 97
+	'-'  reduce 97
+	'*'  reduce 97
+	'/'  reduce 97
+
+
+state 129
+	Statement : Body .  (48)
+
+	.  reduce 48
+
+
+state 130
+	Statement : Expression .  (51)
+
+	.  reduce 51
+
+
+state 131
+	Statement : Primary . SWAP Primary  (49)
+	EXPI : Primary .  (95)
+	EXPI : Primary . MUL EXPI  (96)
+
+	MUL  shift 73
+	SWAP  shift 162
+	END  reduce 95
+	LGE  reduce 95
+	POOL  reduce 95
+	ELSE  reduce 95
+	UEQ  reduce 95
+	UNTIL  reduce 95
+	MOD  reduce 95
+	AND  reduce 95
+	LTE  reduce 95
+	OR  reduce 95
+	';'  reduce 95
+	'='  reduce 95
+	'<'  reduce 95
+	'>'  reduce 95
+	'+'  reduce 95
+	'-'  reduce 95
+	'*'  reduce 95
+	'/'  reduce 95
+
+
+state 132
+	Tiny : PROGRAM Name ':' Consts Types Dclns SubProgs Body Name . '.'  (1)
+
+	'.'  shift 163
+	.  error
+
+
+state 133
+	Primary : CHR '(' Expression ')' .  (107)
+
+	.  reduce 107
+
+
+state 134
+	Primary : PRED '(' Expression ')' .  (105)
+
+	.  reduce 105
+
+
+state 135
+	Primary : ORD '(' Expression ')' .  (106)
+
+	.  reduce 106
+
+
+state 136
+	Primary : SUCC '(' Expression ')' .  (104)
+
+	.  reduce 104
+
+
+state 137
+	Primary_1 : Expression ')' .  (109)
+
+	.  reduce 109
+
+
+state 138
+	Primary_1 : Expression ',' . Primary_1  (110)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	Primary_1  goto 164
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 106
+	Primary  goto 39
+
+
+state 139
+	Lit_1 : Name ')' .  (9)
+
+	.  reduce 9
+
+
+state 140
+	Lit_1 : Name ',' . Lit_1  (10)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Lit_1  goto 165
+	Name  goto 109
+
+
+state 141
+	Params : '(' ')' .  (29)
+
+	.  reduce 29
+
+
+state 142
+	Params : '(' Params_1 .  (28)
+
+	.  reduce 28
+
+
+state 143
+	Params_1 : Dcln . ')'  (31)
+	Params_1 : Dcln . ';' Params_1  (32)
+
+	';'  shift 166
+	')'  shift 167
+	.  error
+
+
+state 144
+	Function : FUNCTION Name Params ':' . Name ';' Consts Types Dclns Body Name ';'  (26)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 168
+
+
+state 145
+	Function : PROCEDURE Name Params ';' . Consts Types Dclns Body Name ';'  (27)
+	Consts : .  (12)
+
+	CONST  shift 6
+	VAR  reduce 12
+	BEGINX  reduce 12
+	TYPE  reduce 12
+
+	Consts  goto 169
+
+
+state 146
+	Statement : IF Expression . THEN Statement ELSE Statement  (45)
+	Statement : IF Expression . THEN Statement  (46)
+
+	THEN  shift 170
+	.  error
+
+
+state 147
+	Statement : READ '(' . Statement_1_1_1_1_1_1  (44)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Statement_1_1_1_1_1_1  goto 171
+	Expression  goto 172
+	Primary  goto 39
+
+
+state 148
+	Statement_1_1_1_1 : Statement . UNTIL Expression  (59)
+	Statement_1_1_1_1 : Statement . ';' Statement_1_1_1_1  (60)
+
+	UNTIL  shift 173
+	';'  shift 174
+	.  error
+
+
+state 149
+	Statement : REPEAT Statement_1_1_1_1 .  (39)
+
+	.  reduce 39
+
+
+state 150
+	Statement : RETURN '(' . Expression ')'  (53)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 175
+	Primary  goto 39
+
+
+state 151
+	Statement : RETURN MissValue .  (52)
+
+	.  reduce 52
+
+
+state 152
+	MissValue : TheValue .  (67)
+
+	.  reduce 67
+
+
+state 153
+	Statement : FOR Name . ASSIGNMENT Primary DOWNTO Primary DO Statement  (40)
+	Statement : FOR Name . ASSIGNMENT Primary TO Primary DO Statement  (41)
+
+	ASSIGNMENT  shift 176
+	.  error
+
+
+state 154
+	Statement : CASE Expression . OF Statement_1_1  (37)
+	Statement : CASE Expression . OF Statement_1_1_1  (38)
+
+	OF  shift 177
+	.  error
+
+
+state 155
+	Statement : WHILE Expression . DO Statement  (47)
+
+	DO  shift 178
+	.  error
+
+
+state 156
+	Statement : OUTPUT '(' . Statement_1_1_1_1_1  (43)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Statement_1_1_1_1_1  goto 179
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 180
+	Primary  goto 39
+
+
+state 157
+	Statement : LOOP Statement_1 .  (36)
+
+	.  reduce 36
+
+
+state 158
+	Statement_1 : Statement . POOL  (65)
+	Statement_1 : Statement . ';' Statement_1  (66)
+
+	POOL  shift 181
+	';'  shift 182
+	.  error
+
+
+state 159
+	Body_1 : Statement END .  (34)
+
+	.  reduce 34
+
+
+state 160
+	Body_1 : Statement ';' . Body_1  (35)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Body_1  goto 183
+	Statement  goto 127
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 161
+	Statement : Name ASSIGNMENT . Expression  (42)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 184
+	Primary  goto 39
+
+
+state 162
+	Statement : Primary SWAP . Primary  (49)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	.  error
+
+	Name  goto 37
+	Primary  goto 185
+
+
+state 163
+	Tiny : PROGRAM Name ':' Consts Types Dclns SubProgs Body Name '.' .  (1)
+
+	.  reduce 1
+
+
+state 164
+	Primary_1 : Expression ',' Primary_1 .  (110)
+
+	.  reduce 110
+
+
+state 165
+	Lit_1 : Name ',' Lit_1 .  (10)
+
+	.  reduce 10
+
+
+state 166
+	Params_1 : Dcln ';' . Params_1  (32)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Params_1  goto 186
+	Dcln  goto 143
+	Dcln_1  goto 43
+	Name  goto 44
+
+
+state 167
+	Params_1 : Dcln ')' .  (31)
+
+	.  reduce 31
+
+
+state 168
+	Function : FUNCTION Name Params ':' Name . ';' Consts Types Dclns Body Name ';'  (26)
+
+	';'  shift 187
+	.  error
+
+
+state 169
+	Function : PROCEDURE Name Params ';' Consts . Types Dclns Body Name ';'  (27)
+	Types : .  (3)
+
+	TYPE  shift 11
+	VAR  reduce 3
+	BEGINX  reduce 3
+
+	Types  goto 188
+
+
+state 170
+	Statement : IF Expression THEN . Statement ELSE Statement  (45)
+	Statement : IF Expression THEN . Statement  (46)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	POOL  reduce 54
+	ELSE  reduce 54
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 189
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 171
+	Statement : READ '(' Statement_1_1_1_1_1_1 .  (44)
+
+	.  reduce 44
+
+
+state 172
+	Statement_1_1_1_1_1_1 : Expression . ')'  (55)
+	Statement_1_1_1_1_1_1 : Expression . ',' Statement_1_1_1_1_1_1  (56)
+
+	')'  shift 190
+	','  shift 191
+	.  error
+
+
+state 173
+	Statement_1_1_1_1 : Statement UNTIL . Expression  (59)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 192
+	Primary  goto 39
+
+
+state 174
+	Statement_1_1_1_1 : Statement ';' . Statement_1_1_1_1  (60)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 148
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Statement_1_1_1_1  goto 193
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 175
+	Statement : RETURN '(' Expression . ')'  (53)
+
+	')'  shift 194
+	.  error
+
+
+state 176
+	Statement : FOR Name ASSIGNMENT . Primary DOWNTO Primary DO Statement  (40)
+	Statement : FOR Name ASSIGNMENT . Primary TO Primary DO Statement  (41)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	.  error
+
+	Name  goto 37
+	Primary  goto 195
+
+
+state 177
+	Statement : CASE Expression OF . Statement_1_1  (37)
+	Statement : CASE Expression OF . Statement_1_1_1  (38)
+
+	STRING  shift 21
+	END  shift 196
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	OTHERWISE  shift 197
+	'('  shift 30
+	.  error
+
+	Statement_1_1  goto 198
+	OTHER  goto 199
+	SCOPE  goto 200
+	Statement_1_1_1  goto 201
+	Name  goto 37
+	CASE_CLAUSE  goto 202
+	Primary  goto 203
+
+
+state 178
+	Statement : WHILE Expression DO . Statement  (47)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	POOL  reduce 54
+	ELSE  reduce 54
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 204
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 179
+	Statement : OUTPUT '(' Statement_1_1_1_1_1 .  (43)
+
+	.  reduce 43
+
+
+state 180
+	Statement_1_1_1_1_1 : Expression . ')'  (57)
+	Statement_1_1_1_1_1 : Expression . ',' Statement_1_1_1_1_1  (58)
+
+	')'  shift 205
+	','  shift 206
+	.  error
+
+
+state 181
+	Statement_1 : Statement POOL .  (65)
+
+	.  reduce 65
+
+
+state 182
+	Statement_1 : Statement ';' . Statement_1  (66)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	POOL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement_1  goto 207
+	Statement  goto 158
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 183
+	Body_1 : Statement ';' Body_1 .  (35)
+
+	.  reduce 35
+
+
+state 184
+	Statement : Name ASSIGNMENT Expression .  (42)
+
+	.  reduce 42
+
+
+state 185
+	Statement : Primary SWAP Primary .  (49)
+
+	.  reduce 49
+
+
+state 186
+	Params_1 : Dcln ';' Params_1 .  (32)
+
+	.  reduce 32
+
+
+state 187
+	Function : FUNCTION Name Params ':' Name ';' . Consts Types Dclns Body Name ';'  (26)
+	Consts : .  (12)
+
+	CONST  shift 6
+	VAR  reduce 12
+	BEGINX  reduce 12
+	TYPE  reduce 12
+
+	Consts  goto 208
+
+
+state 188
+	Function : PROCEDURE Name Params ';' Consts Types . Dclns Body Name ';'  (27)
+	Dclns : .  (17)
+
+	VAR  shift 18
+	BEGINX  reduce 17
+
+	Dclns  goto 209
+
+
+189: shift/reduce conflict (shift 210, reduce 46) on ELSE
+state 189
+	Statement : IF Expression THEN Statement . ELSE Statement  (45)
+	Statement : IF Expression THEN Statement .  (46)
+
+	ELSE  shift 210
+	END  reduce 46
+	POOL  reduce 46
+	UNTIL  reduce 46
+	';'  reduce 46
+
+
+state 190
+	Statement_1_1_1_1_1_1 : Expression ')' .  (55)
+
+	.  reduce 55
+
+
+state 191
+	Statement_1_1_1_1_1_1 : Expression ',' . Statement_1_1_1_1_1_1  (56)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Statement_1_1_1_1_1_1  goto 211
+	Expression  goto 172
+	Primary  goto 39
+
+
+state 192
+	Statement_1_1_1_1 : Statement UNTIL Expression .  (59)
+
+	.  reduce 59
+
+
+state 193
+	Statement_1_1_1_1 : Statement ';' Statement_1_1_1_1 .  (60)
+
+	.  reduce 60
+
+
+state 194
+	Statement : RETURN '(' Expression ')' .  (53)
+
+	.  reduce 53
+
+
+state 195
+	Statement : FOR Name ASSIGNMENT Primary . DOWNTO Primary DO Statement  (40)
+	Statement : FOR Name ASSIGNMENT Primary . TO Primary DO Statement  (41)
+
+	TO  shift 212
+	DOWNTO  shift 213
+	.  error
+
+
+state 196
+	Statement_1_1_1 : END .  (61)
+
+	.  reduce 61
+
+
+state 197
+	OTHER : OTHERWISE . Statement OTHER_1  (69)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 214
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 198
+	Statement : CASE Expression OF Statement_1_1 .  (37)
+
+	.  reduce 37
+
+
+state 199
+	Statement_1_1 : OTHER . END  (63)
+
+	END  shift 215
+	.  error
+
+
+state 200
+	CASE_CLAUSE : SCOPE . ':' Statement  (73)
+
+	':'  shift 216
+	.  error
+
+
+state 201
+	Statement : CASE Expression OF Statement_1_1_1 .  (38)
+
+	.  reduce 38
+
+
+state 202
+	Statement_1_1_1 : CASE_CLAUSE . ';' Statement_1_1_1  (62)
+	Statement_1_1 : CASE_CLAUSE . ';' Statement_1_1  (64)
+
+	';'  shift 217
+	.  error
+
+
+state 203
+	CASE_CLAUSE : Primary . ':' Statement  (72)
+	SCOPE : Primary . RANGE Primary  (74)
+
+	RANGE  shift 218
+	':'  shift 219
+	.  error
+
+
+state 204
+	Statement : WHILE Expression DO Statement .  (47)
+
+	.  reduce 47
+
+
+state 205
+	Statement_1_1_1_1_1 : Expression ')' .  (57)
+
+	.  reduce 57
+
+
+state 206
+	Statement_1_1_1_1_1 : Expression ',' . Statement_1_1_1_1_1  (58)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	NOT  shift 25
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	.  error
+
+	Statement_1_1_1_1_1  goto 220
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Term  goto 36
+	Name  goto 37
+	Expression  goto 180
+	Primary  goto 39
+
+
+state 207
+	Statement_1 : Statement ';' Statement_1 .  (66)
+
+	.  reduce 66
+
+
+state 208
+	Function : FUNCTION Name Params ':' Name ';' Consts . Types Dclns Body Name ';'  (26)
+	Types : .  (3)
+
+	TYPE  shift 11
+	VAR  reduce 3
+	BEGINX  reduce 3
+
+	Types  goto 221
+
+
+state 209
+	Function : PROCEDURE Name Params ';' Consts Types Dclns . Body Name ';'  (27)
+
+	BEGINX  shift 84
+	.  error
+
+	Body  goto 222
+
+
+state 210
+	Statement : IF Expression THEN Statement ELSE . Statement  (45)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	POOL  reduce 54
+	ELSE  reduce 54
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 223
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 211
+	Statement_1_1_1_1_1_1 : Expression ',' Statement_1_1_1_1_1_1 .  (56)
+
+	.  reduce 56
+
+
+state 212
+	Statement : FOR Name ASSIGNMENT Primary TO . Primary DO Statement  (41)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	.  error
+
+	Name  goto 37
+	Primary  goto 224
+
+
+state 213
+	Statement : FOR Name ASSIGNMENT Primary DOWNTO . Primary DO Statement  (40)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	.  error
+
+	Name  goto 37
+	Primary  goto 225
+
+
+state 214
+	OTHER : OTHERWISE Statement . OTHER_1  (69)
+	OTHER_1 : .  (70)
+
+	';'  shift 226
+	END  reduce 70
+
+	OTHER_1  goto 227
+
+
+state 215
+	Statement_1_1 : OTHER END .  (63)
+
+	.  reduce 63
+
+
+state 216
+	CASE_CLAUSE : SCOPE ':' . Statement  (73)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 228
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 217
+	Statement_1_1_1 : CASE_CLAUSE ';' . Statement_1_1_1  (62)
+	Statement_1_1 : CASE_CLAUSE ';' . Statement_1_1  (64)
+
+	STRING  shift 21
+	END  shift 196
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	OTHERWISE  shift 197
+	'('  shift 30
+	.  error
+
+	Statement_1_1  goto 229
+	OTHER  goto 199
+	SCOPE  goto 200
+	Statement_1_1_1  goto 230
+	Name  goto 37
+	CASE_CLAUSE  goto 202
+	Primary  goto 203
+
+
+state 218
+	SCOPE : Primary RANGE . Primary  (74)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	CHARACTER  shift 23
+	PRED  shift 24
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	SUCC  shift 29
+	'('  shift 30
+	.  error
+
+	Name  goto 37
+	Primary  goto 231
+
+
+state 219
+	CASE_CLAUSE : Primary ':' . Statement  (72)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 232
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 220
+	Statement_1_1_1_1_1 : Expression ',' Statement_1_1_1_1_1 .  (58)
+
+	.  reduce 58
+
+
+state 221
+	Function : FUNCTION Name Params ':' Name ';' Consts Types . Dclns Body Name ';'  (26)
+	Dclns : .  (17)
+
+	VAR  shift 18
+	BEGINX  reduce 17
+
+	Dclns  goto 233
+
+
+state 222
+	Function : PROCEDURE Name Params ';' Consts Types Dclns Body . Name ';'  (27)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 234
+
+
+state 223
+	Statement : IF Expression THEN Statement ELSE Statement .  (45)
+
+	.  reduce 45
+
+
+state 224
+	Statement : FOR Name ASSIGNMENT Primary TO Primary . DO Statement  (41)
+
+	DO  shift 235
+	.  error
+
+
+state 225
+	Statement : FOR Name ASSIGNMENT Primary DOWNTO Primary . DO Statement  (40)
+
+	DO  shift 236
+	.  error
+
+
+state 226
+	OTHER_1 : ';' . OTHER_1  (71)
+	OTHER_1 : .  (70)
+
+	';'  shift 226
+	END  reduce 70
+
+	OTHER_1  goto 237
+
+
+state 227
+	OTHER : OTHERWISE Statement OTHER_1 .  (69)
+
+	.  reduce 69
+
+
+state 228
+	CASE_CLAUSE : SCOPE ':' Statement .  (73)
+
+	.  reduce 73
+
+
+state 229
+	Statement_1_1 : CASE_CLAUSE ';' Statement_1_1 .  (64)
+
+	.  reduce 64
+
+
+state 230
+	Statement_1_1_1 : CASE_CLAUSE ';' Statement_1_1_1 .  (62)
+
+	.  reduce 62
+
+
+state 231
+	SCOPE : Primary RANGE Primary .  (74)
+
+	.  reduce 74
+
+
+state 232
+	CASE_CLAUSE : Primary ':' Statement .  (72)
+
+	.  reduce 72
+
+
+state 233
+	Function : FUNCTION Name Params ':' Name ';' Consts Types Dclns . Body Name ';'  (26)
+
+	BEGINX  shift 84
+	.  error
+
+	Body  goto 238
+
+
+state 234
+	Function : PROCEDURE Name Params ';' Consts Types Dclns Body Name . ';'  (27)
+
+	';'  shift 239
+	.  error
+
+
+state 235
+	Statement : FOR Name ASSIGNMENT Primary TO Primary DO . Statement  (41)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	POOL  reduce 54
+	ELSE  reduce 54
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 240
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 236
+	Statement : FOR Name ASSIGNMENT Primary DOWNTO Primary DO . Statement  (40)
+	Statement : .  (54)
+
+	STRING  shift 21
+	IDENTIFIER  shift 3
+	CHR  shift 22
+	IF  shift 116
+	READ  shift 117
+	REPEAT  shift 118
+	RETURN  shift 119
+	FOR  shift 120
+	CHARACTER  shift 23
+	CASE  shift 121
+	WHILE  shift 122
+	OUTPUT  shift 123
+	EXIT  shift 124
+	PRED  shift 24
+	NOT  shift 25
+	BEGINX  shift 84
+	ORD  shift 26
+	INTEGER_NUM  shift 27
+	EOFX  shift 28
+	LOOP  shift 125
+	SUCC  shift 29
+	'('  shift 30
+	'+'  shift 31
+	'-'  shift 32
+	END  reduce 54
+	POOL  reduce 54
+	ELSE  reduce 54
+	UNTIL  reduce 54
+	';'  reduce 54
+
+	Adv  goto 33
+	Extra  goto 34
+	EXPI  goto 35
+	Statement  goto 241
+	Term  goto 36
+	Name  goto 128
+	Body  goto 129
+	Expression  goto 130
+	Primary  goto 131
+
+
+state 237
+	OTHER_1 : ';' OTHER_1 .  (71)
+
+	.  reduce 71
+
+
+state 238
+	Function : FUNCTION Name Params ':' Name ';' Consts Types Dclns Body . Name ';'  (26)
+
+	IDENTIFIER  shift 3
+	.  error
+
+	Name  goto 242
+
+
+state 239
+	Function : PROCEDURE Name Params ';' Consts Types Dclns Body Name ';' .  (27)
+
+	.  reduce 27
+
+
+state 240
+	Statement : FOR Name ASSIGNMENT Primary TO Primary DO Statement .  (41)
+
+	.  reduce 41
+
+
+state 241
+	Statement : FOR Name ASSIGNMENT Primary DOWNTO Primary DO Statement .  (40)
+
+	.  reduce 40
+
+
+state 242
+	Function : FUNCTION Name Params ':' Name ';' Consts Types Dclns Body Name . ';'  (26)
+
+	';'  shift 243
+	.  error
+
+
+state 243
+	Function : FUNCTION Name Params ':' Name ';' Consts Types Dclns Body Name ';' .  (26)
+
+	.  reduce 26
+
+
+State 189 contains 1 shift/reduce conflict.
+
+
+62 terminals, 42 nonterminals
+112 grammar rules, 244 states

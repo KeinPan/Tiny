@@ -1,0 +1,59 @@
+
+program TestPrimes:
+
+type
+    Result = ( Composite, Prime, TooBig );
+    color  = ( red, white, blue, green, purple, cyan, magenta, orange, black );
+
+var n: integer;
+
+
+procedure print ( i : integer );
+type 
+    Result = ( red, white, blue );
+var
+    color : Result;
+begin
+    color := red;
+    case i of
+    0: color := red;
+    1: color := white;
+    2: color := blue;
+    end;
+    if color = red then output ( 0 )
+    else if color = white then output ( 1 )
+    else output ( 2 );
+end print;
+
+{
+function Color ( n : integer ): color;
+begin
+    if n < 9 then
+         case n of
+	  0: return (red);
+	  1: return (white);
+	  2: return (blue);
+	  3: return (green);
+	  4: return (purple);
+	  5: return (cyan);
+	  6: return (magenta);
+	  7: return (orange);
+	  8: return (black);
+	  end
+    else return (Color ( n mod 9 ));
+    
+end Color;
+}
+
+
+begin
+
+   { repeat}
+	{read(n);}
+       { output(Color(n));}
+        print(1);
+       { print(Color(n))}
+	
+{    until eof}
+
+end TestPrimes.

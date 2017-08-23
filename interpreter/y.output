@@ -1,0 +1,155 @@
+   0  $accept : codeFile $end
+
+   1  codeFile : codeFile lines
+   2           | lines
+
+   3  lines : LABEL ID ID ID NL
+   4        | LABEL ID ID NL
+   5        | LABEL ID NL
+   6        | ID ID ID NL
+   7        | ID ID NL
+   8        | ID NL
+   9        | NL
+
+state 0
+	$accept : . codeFile $end  (0)
+
+	ID  shift 1
+	LABEL  shift 2
+	NL  shift 3
+	.  error
+
+	codeFile  goto 4
+	lines  goto 5
+
+
+state 1
+	lines : ID . ID ID NL  (6)
+	lines : ID . ID NL  (7)
+	lines : ID . NL  (8)
+
+	ID  shift 6
+	NL  shift 7
+	.  error
+
+
+state 2
+	lines : LABEL . ID ID ID NL  (3)
+	lines : LABEL . ID ID NL  (4)
+	lines : LABEL . ID NL  (5)
+
+	ID  shift 8
+	.  error
+
+
+state 3
+	lines : NL .  (9)
+
+	.  reduce 9
+
+
+state 4
+	$accept : codeFile . $end  (0)
+	codeFile : codeFile . lines  (1)
+
+	$end  accept
+	ID  shift 1
+	LABEL  shift 2
+	NL  shift 3
+	.  error
+
+	lines  goto 9
+
+
+state 5
+	codeFile : lines .  (2)
+
+	.  reduce 2
+
+
+state 6
+	lines : ID ID . ID NL  (6)
+	lines : ID ID . NL  (7)
+
+	ID  shift 10
+	NL  shift 11
+	.  error
+
+
+state 7
+	lines : ID NL .  (8)
+
+	.  reduce 8
+
+
+state 8
+	lines : LABEL ID . ID ID NL  (3)
+	lines : LABEL ID . ID NL  (4)
+	lines : LABEL ID . NL  (5)
+
+	ID  shift 12
+	NL  shift 13
+	.  error
+
+
+state 9
+	codeFile : codeFile lines .  (1)
+
+	.  reduce 1
+
+
+state 10
+	lines : ID ID ID . NL  (6)
+
+	NL  shift 14
+	.  error
+
+
+state 11
+	lines : ID ID NL .  (7)
+
+	.  reduce 7
+
+
+state 12
+	lines : LABEL ID ID . ID NL  (3)
+	lines : LABEL ID ID . NL  (4)
+
+	ID  shift 15
+	NL  shift 16
+	.  error
+
+
+state 13
+	lines : LABEL ID NL .  (5)
+
+	.  reduce 5
+
+
+state 14
+	lines : ID ID ID NL .  (6)
+
+	.  reduce 6
+
+
+state 15
+	lines : LABEL ID ID ID . NL  (3)
+
+	NL  shift 17
+	.  error
+
+
+state 16
+	lines : LABEL ID ID NL .  (4)
+
+	.  reduce 4
+
+
+state 17
+	lines : LABEL ID ID ID NL .  (3)
+
+	.  reduce 3
+
+
+6 terminals, 3 nonterminals
+10 grammar rules, 18 states
